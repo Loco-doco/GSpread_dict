@@ -3,12 +3,13 @@ function getLastRowSpecial(range){
   var rowNum = 0;
   var blank = false;
   for(var row = 0; row < range.length; row++){
- 
+//    Logger.log("range[row][0] =", range[row][0])
     if(range[row][0] === "" && !blank){
       rowNum = row;
       blank = true;
  
     }else if(range[row][0] !== ""){
+      rowNum += 1
       blank = false;
     };
   };

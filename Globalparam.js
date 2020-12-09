@@ -6,9 +6,6 @@ const WordSheet = sa.getSheetByName('Word');
 let wordSheetLastRow = WordSheet.getRange("A:A").getValues();
 wordSheetLastRow = getLastRowSpecial(wordSheetLastRow);
 
-const TransMediumSheet = sa.getSheetByName('TransMedium');
-
-const TransSheet = sa.getSheetByName('Translate');
 
 const ENSheet = sa.getSheetByName('EN');
 const FRSheet = sa.getSheetByName('FR');
@@ -32,32 +29,18 @@ const WordSheetColObj = {
   "ES_updatedAt" : letterToColumn("Q"),
 }
 
-/*
-* TransMedium 시트에 관한 컬럼 정보를 담은 객체.
-* wordKey : Key 값의 컬럼 정보
-*/
-const TransMediumColObj = {
-  "wordKey" : letterToColumn("A"),
-  "KR_val" : letterToColumn("B"),
-  "KR_updatedAt" : letterToColumn("C"),
-  "EN_val" : letterToColumn("D"),
-  "EN_updatedAt" : letterToColumn("E"),
-  "FR_val" : letterToColumn("F"),
-  "FR_updatedAt" : letterToColumn("G"),
-  "ES_val" : letterToColumn("H"),
-  "ES_updatedAt" : letterToColumn("I"),
-}
-
 /* 
 * Translate 시트에 관한 정보를 담은 객체.
 * startRow : 시작 행 (모든 언어 일괄 적용)
 * colRange : 각 언어별 컬럼 갯수 (모든 언어 일괄 적용)
-* 언어_startCol : 각 언어별 시작 행
+* startCol : 각 언어별 시작 컬럼
+* lastCol : 각 언어별 마지막 컬럼
 */
 const TransObj = {
   "startRow" : 5,
   "colRange" : 4,
   "startCol" : letterToColumn("A"),
+  "lastCol" : letterToColumn("D"),
 }
 
 

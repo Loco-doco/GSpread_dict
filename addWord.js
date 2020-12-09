@@ -32,12 +32,11 @@ const userInput = (form) => {
 //    return form[v]
 //  })
 
-  const sheetRange = KRSheet.getRange("A:A").getValues();
-  const lastRows = getLastRowSpecial(sheetRange);
-  Logger.log(lastRows)
+  const datetime = new Date()
+  Logger.log(wordSheetLastRow)
   
 //  var lastRow = configSheet.getRange("G2").getValue(); // +1  
-  KRSheet.getRange(lastRows+1,1,1,9).setValues([[
+  WordSheet.getRange(wordSheetLastRow+1,1,1,9).setValues([[
     form.wordOrSenKey,
     form.lanCheckValues,
     form.prodCheckValues,
@@ -45,7 +44,7 @@ const userInput = (form) => {
     form.wordOrSenDesc,
     form.description,
     form.refWiki,
-    new Date(),
+    datetime,
     userEmail
   ]]);
   
@@ -54,21 +53,23 @@ const userInput = (form) => {
 
 // 언어 배포 값 동적 GET
 const getLanValidate = () => {
-  const list = [];
   const data = configSheet.getRange("A2:B30").getValues();
-  data.forEach( (e) => {
-    if(!e[0] === false) list.push(e)
-  })
+  let list = data.reduce( (acc, val) => {
+    if(val[0]) acc.push(val)
+    return acc
+  },[])
+  
   return list
 }
 
 // 제품 배포 값 동적 GET
 const getProdValidate = () => {
-  const list = [];
   const data = configSheet.getRange("C2:D30").getValues();
-  data.forEach( (e) => {
-    if(!e[0] === false) list.push(e)
-  })
+  let list = data.reduce( (acc, val) => {
+    if(val[0]) acc.push(val)
+    return acc
+  }, [])
+  
   return list
 }
 
@@ -82,11 +83,10 @@ const getSenCount = () => {
 
 // 현재까지 입력된 KR시트의 단어, 문장 Key들 갖고오기.
 const getCurrKeys = () => {
-  const lastRow = configSheet.getRange("G2").getValue();
-  if(lastRow <= 1){
+  if(wordSheetLastRow <= 1){
     return new Array();
   } else {
-    const data = KRSheet.getRange(2,1,lastRow-1,1).getValues();
+    const data = WordSheet.getRange(2,WordSheetColObj.wordKey,wordSheetLastRow-1,1).getValues();
     return data
   }
 }

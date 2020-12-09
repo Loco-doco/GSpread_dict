@@ -68,6 +68,13 @@
       position: relative;
       top: 1px;
     }
+    
+    .myButton:disabled,
+    button[disabled]{
+      border: 1px solid #999999;
+      background-color: #cccccc;
+      color: #666666;
+    }
 
     input[type=text],
     textarea {
@@ -122,9 +129,9 @@
       <div id="info">참고위치</div>
       <textarea id="refWiki" name="refWiki" placeholder="참고위치"></textarea>
     </div>
-
-    <div class="myButton" onClick="formSubmit()">Save</div>
-    
+    <div id="submitBtn">
+      <button class="myButton" onClick="formSubmit()">Save</button>
+    </div>
     </form>
     <?!= include("addWordScript"); ?>
   </body>

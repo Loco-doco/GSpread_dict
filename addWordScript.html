@@ -5,34 +5,66 @@
     descValErr : '내용을 입력해주세요.',
     duplicateKeyErr : '중복된 단어입니다!'
   }
-
-  const formSubmit = async () => {
-    const lanCheckValues = calPubVals('lanCheck'); // 언어 배포값 
-    const prodCheckValues = calPubVals('prodCheck'); // 제품 배포값
-    const isWord = document.getElementById('inputWord').checked? 1:0 ; // 단어면 1, 문장이면 0
-    
-    const wordOrSenKey = await getWordOrSenKeyVal(isWord);
-    const wordOrSenDesc = getWordOrSenDesc();
-    
-    const description = getDescription();
-    const refWiki = getRefWiki();
-    
-    const returnObj = {
-      lanCheckValues,
-      prodCheckValues,
-      isWord,
-      wordOrSenKey,
-      wordOrSenDesc,
-      description,
-      refWiki
-      }
-      
-    const postResult = await postDataForm(returnObj);
-    if(postResult) alert('추가 완료')
+  
+  const buttonOn = () => {
+     document.getElementById('submitBtn').innerHTML =
+        "<button class='myButton' onClick='formSubmit()'>Save</button>"
   }
   
-  const postDataForm = (returnObj) => {
-    return new Promise( (resolve,reject) => {
+  const buttonOff = () => {
+    console.log("emfdjdha")
+    document.getElementById('submitBtn').innerHTML =
+        "<button class='myButton' onClick='formSubmit()' disabled >배포중임다</button>"
+  }
+  
+  const formSubmit = async () => {
+    try{
+      console.time('0')
+      buttonOff()
+      console.timeEnd('0')
+      console.time('1')
+      const lanCheckValues = calPubVals('lanCheck'); // 언어 배포값 
+      console.timeEnd('1')
+      console.time('2')      
+      const prodCheckValues = calPubVals('prodCheck'); // 제품 배포값
+      console.timeEnd('2')
+      console.time('3')      
+      const isWord = document.getElementById('inputWord').checked? 1:0 ; // 단어면 1, 문장이면 0
+      console.timeEnd('3')
+      console.time('4')            
+      const wordOrSenKey = await getWordOrSenKeyVal(isWord);
+      const wordOrSenDesc = getWordOrSenDesc();
+      console.timeEnd('4')
+      console.time('5')            
+      const description = getDescription();
+      const refWiki = getRefWiki();
+      console.timeEnd('5')
+      console.time('6')            
+      const returnObj = {
+        lanCheckValues,
+        prodCheckValues,
+        isWord,
+        wordOrSenKey,
+        wordOrSenDesc,
+        description,
+        refWiki
+        }
+      const postResult = await postDataForm(returnObj);
+      console.timeEnd('6')
+      console.time('6.5')
+      if(postResult) alert('추가 완료')
+      console.timeEnd('6.5')
+      console.time('7')  
+      buttonOn()
+      console.timeEnd('7')
+    } catch(e) {
+      buttonOn()
+    }
+  }
+  
+  // SuccessHandler로 google script 함수 중 userInput 내용 값 받아오기
+  function postDataForm(returnObj){
+    return new Promise( function(resolve,reject){
     
       google.script.run.withSuccessHandler(function (result){
         resolve(result)
@@ -41,11 +73,11 @@
     })
   }
   
-  // 배포값 계산
+  // 배포값 계산 (HTML element)
   const calPubVals = (nameVal) => { 
     const values = document.getElementsByName(nameVal)
-    let calValues = Number(1);
     
+    let calValues = Number(1)
     values.forEach( (e) => {
       if(e.checked) calValues = calValues * Number(e.value)
     })
@@ -53,15 +85,14 @@
     if(calValues === 1){
       alert(errMsg.pubValErr)
       throw new Error (errMsg.pubValErr)
-//      return null
     }
     
     return calValues
   }
   
+  
   // '단어' 버튼 선택 시 onClick 함수
   const onTypeWord = () => {
-    console.log("typeWord-On")
     document.getElementById('inputSen').checked = false
     document.getElementById('typeWord').innerHTML =
         "<div> 키 값 </div> \
@@ -72,26 +103,23 @@
 
   // '문장' 버튼 선택 시 onClick 함수
   const onAutoSen = () => {
-    console.log("AutoSen-On")
     document.getElementById('inputWord').checked = false
     document.getElementById('typeWord').innerHTML = 
         "<div> 내용 </div> \
         <input type='text' id='inputDesc' name='inputDesc' />";
   }
   
-  // 단어 / 문장 키 값 계산
+  // 단어,문장 키 값 계산
   const getWordOrSenKeyVal = async (isWord) => {
     if (isWord){
       const textValue = document.getElementById('inputWordKey').value;
       
       const fixedTextValue = await fixWord(textValue)
-      console.log("fixedTextValue =", fixedTextValue)
       
       return fixedTextValue
     } else {
       const senCount = await getSenFromSheet();
       const senValue = "str_sen_"+senCount
-//      console.log(senValue)
       return senValue
     }
   }
@@ -100,23 +128,6 @@
   const getSenFromSheet = () => {
     return new Promise( (resolve,reject) => {
       google.script.run.withSuccessHandler( (count) => resolve(count) ).getSenCount();
-    })
-  }
-  
-  // 단어 / 문장의 내용 가져오기
-  const getWordOrSenDesc = () => {
-    var value = document.getElementById('inputDesc').value;
-    if (!value){
-      alert(errMsg.descValErr)
-      throw new Error (errMsg.descValErr)
-    }
-    return value
-  }
-  
-  // 현재까지 입력된 키 값들 가져오기 (중복검증용)
-  const getCurrKeysFromSheet = () => {
-    return new Promise( (resolve,reject) => {
-      google.script.run.withSuccessHandler( (data) => resolve(data) ).getCurrKeys();
     })
   }
   
@@ -131,22 +142,39 @@
     }
     
     returnWord = "str_"+word
-    const currKeys = await getCurrKeysFromSheet();
     
     //중복검증
-    currKeys.filter(function(v){
-      if(v[0] === returnWord){
+    const currKeys = await getCurrKeysFromSheet();
+    const isDuplicated = currKeys.some((e) => e.includes(returnWord))
+    
+    if(isDuplicated){
         alert(errMsg.duplicateKeyErr)
         throw new Error (errMsg.duplicateKeyErr)
       }
-    })
     
     return returnWord
   }
+ 
   
+  // 단어,문장의 내용 가져오기 (HTML DOM)
+  const getWordOrSenDesc = () => {
+    var value = document.getElementById('inputDesc').value;
+    if (!value){
+      alert(errMsg.descValErr)
+      throw new Error (errMsg.descValErr)
+    }
+    return value
+  }
+  
+  // SuccessHandler로 google script 함수 중 현재까지 입력된 키 값들 가져오기 (중복검증용)
+  const getCurrKeysFromSheet = () => {
+    return new Promise( (resolve,reject) => {
+      google.script.run.withSuccessHandler( (data) => resolve(data) ).getCurrKeys();
+    })
+  }
+
   // 상세 설명 갖고오기
   const getDescription = () => document.getElementById('description').value;
-  
   
   // 참고위치 갖고오기
   const getRefWiki = () => document.getElementById('refWiki').value;
