@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <?!= include('CSS.html') ?>
+  </head>
+  <body>
+  <? const lanData = getLanValidate(); ?>
+  <? const prodData = getProdValidate(); ?>
+  
+    <form>
+    <div id="dataInput">
+    
+      <div id="info">언어 배포 값 설정</div>
+      <? lanData.forEach( (data) => {?>
+        <input type="checkbox" id="lanCheck" value="<?=data[1]?>" name="lanCheck" /> <?= data[0] ?> <br>
+      <? }) ?>
+      
+    </div>
+      <input class="myButton" type="button" value="Select" onclick="calPubVals(lanCheck)" />
+      
+    <div id="dataInput">
+    
+    <div id="info"> 제품 배포 값 설정 </div>
+      <? prodData.forEach( (data) => {?>
+        <input type="checkbox" id="prodCheck" value="<?=data[1]?>" name="prodCheck" /> <?= data[0] ?> <br>
+      <? }) ?>
+      
+    </div>
+      <input class="myButton" type="button" value="Select" onclick="calPubVals(prodCheck)" />
+    </form>
+  </body>
+  <?!= include("addLanProdScript"); ?>
+</html>
+

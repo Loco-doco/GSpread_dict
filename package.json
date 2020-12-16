@@ -1,0 +1,26 @@
+{
+  "name": "gspread_dict",
+  "version": "1.0.0",
+  "description": "용어사전 스프레드 시트용 Google App Scripts",
+  "main": "Globalparam.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "clasp": "npx clasp"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Loco-doco/GSpread_dict.git"
+  },
+  "keywords": [
+    "gspread_dict"
+  ],
+  "author": "kenny",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Loco-doco/GSpread_dict/issues"
+  },
+  "homepage": "https://github.com/Loco-doco/GSpread_dict#readme",
+  "dependencies": {
+    "@google/clasp": "^2.3.0"
+  }
+}

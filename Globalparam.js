@@ -6,10 +6,11 @@ const WordSheet = sa.getSheetByName('Word');
 let wordSheetLastRow = WordSheet.getRange("A:A").getValues();
 wordSheetLastRow = getLastRowSpecial(wordSheetLastRow);
 
-
 const ENSheet = sa.getSheetByName('EN');
 const FRSheet = sa.getSheetByName('FR');
 const ESSheet = sa.getSheetByName('ES');
+
+const BulkSheet = sa.getSheetByName('KR_bulk');
 
 const userEmail = Session.getActiveUser().getEmail();
 
@@ -43,6 +44,15 @@ const TransObj = {
   "lastCol" : letterToColumn("D"),
 }
 
+/* bulk 입력 시트에 관한 정보를 담은 객체
+*/
+const bulkObj = {
+  "startRow" : 4,
+  "colRange" : 7,
+  "startCol" : letterToColumn("A"),
+  "lastCol" : letterToColumn("G")
+}
+
 
 // Custom 메뉴 구현
 function onOpen(e) {
@@ -50,8 +60,18 @@ function onOpen(e) {
   .createMenu('입력하기')
   .addItem('단어 / 문장 입력', 'showAddWordDialog')
   .addToUi();
+  
+  SpreadsheetApp.getUi()
+  .createMenu('배포값 설정')
+  .addItem('언어 배포값', 'showAddLanProdDialog')
+  .addToUi();
 }
 
 function createMenu(){
   SpreadsheetApp.getUi().createMenu('test').addItem('addWord', 'showAddWordDialog').addToUi()
 }
+
+function include(filename){
+  return HtmlService.createHtmlOutputFromFile(filename)
+    .getContent();
+};

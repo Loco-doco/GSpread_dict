@@ -4,10 +4,7 @@ function showAddWordDialog() {
   .showSidebar(html);
 }
 
-function include(filename){
-  return HtmlService.createHtmlOutputFromFile(filename)
-    .getContent();
-};
+
 
 //const ArrOrder = [
 //  "wordOrSenKey",
@@ -62,11 +59,31 @@ const getLanValidate = () => {
   return list
 }
 
+const getLanValidateOnly = () => {
+  const data = configSheet.getRange("A2:B30").getValues();
+  let list = data.reduce( (acc, val) => {
+    if(val[0]) acc.push(val[1])
+    return acc
+  },[])
+    
+  return list
+}
+
 // 제품 배포 값 동적 GET
 const getProdValidate = () => {
   const data = configSheet.getRange("C2:D30").getValues();
   let list = data.reduce( (acc, val) => {
     if(val[0]) acc.push(val)
+    return acc
+  }, [])
+  
+  return list
+}
+
+const getProdValidateOnly = () => {
+  const data = configSheet.getRange("C2:D30").getValues();
+  let list = data.reduce( (acc, val) => {
+    if(val[0]) acc.push(val[1])
     return acc
   }, [])
   

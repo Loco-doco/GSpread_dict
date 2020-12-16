@@ -19,27 +19,14 @@
   
   const formSubmit = async () => {
     try{
-      console.time('0')
       buttonOff()
-      console.timeEnd('0')
-      console.time('1')
       const lanCheckValues = calPubVals('lanCheck'); // 언어 배포값 
-      console.timeEnd('1')
-      console.time('2')      
       const prodCheckValues = calPubVals('prodCheck'); // 제품 배포값
-      console.timeEnd('2')
-      console.time('3')      
-      const isWord = document.getElementById('inputWord').checked? 1:0 ; // 단어면 1, 문장이면 0
-      console.timeEnd('3')
-      console.time('4')            
+      const isWord = document.getElementById('inputWord').checked? 1:2 ; // 단어면 1, 문장이면 0
       const wordOrSenKey = await getWordOrSenKeyVal(isWord);
       const wordOrSenDesc = getWordOrSenDesc();
-      console.timeEnd('4')
-      console.time('5')            
       const description = getDescription();
       const refWiki = getRefWiki();
-      console.timeEnd('5')
-      console.time('6')            
       const returnObj = {
         lanCheckValues,
         prodCheckValues,
@@ -50,13 +37,8 @@
         refWiki
         }
       const postResult = await postDataForm(returnObj);
-      console.timeEnd('6')
-      console.time('6.5')
       if(postResult) alert('추가 완료')
-      console.timeEnd('6.5')
-      console.time('7')  
       buttonOn()
-      console.timeEnd('7')
     } catch(e) {
       buttonOn()
     }
@@ -111,7 +93,7 @@
   
   // 단어,문장 키 값 계산
   const getWordOrSenKeyVal = async (isWord) => {
-    if (isWord){
+    if (isWord === 1){
       const textValue = document.getElementById('inputWordKey').value;
       
       const fixedTextValue = await fixWord(textValue)

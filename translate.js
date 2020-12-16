@@ -69,4 +69,5 @@ const spreadFinWordToWordSheet = (finWord, wordSheetKeys, targetVal, targetRange
       1, targetRange
     ).setValues([[finWord[i][3], datetime, userEmail]])
   }
+  
 }
